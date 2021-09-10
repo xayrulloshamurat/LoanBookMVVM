@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "533005278511",
+    "project_id": "loanbook-811e9",
+    "storage_bucket": "loanbook-811e9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:533005278511:android:a2408c322f5ebc8c0115da",
+        "android_client_info": {
+          "package_name": "com.example.loan_book_mvvm"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "533005278511-3c3nsis168mefrtt1hqeqdjhev1clqvq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPiFf7vzwYUyju-TtRuT95YDnvoMAx_7g"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "533005278511-3c3nsis168mefrtt1hqeqdjhev1clqvq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
