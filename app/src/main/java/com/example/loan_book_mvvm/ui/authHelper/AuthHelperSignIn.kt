@@ -4,8 +4,8 @@ import android.view.View
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 
-class AuthHelperSignIn {
-    private val auth = FirebaseAuth.getInstance()
+class AuthHelperSignIn( private val auth : FirebaseAuth) {
+
 
     fun signIn(
         email: String,

@@ -4,15 +4,14 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.loan_book_mvvm.ui.authHelper.AuthHelperSignUp
 
-class SignUpViewModel : ViewModel(){
-    private var auth = AuthHelperSignUp()
+class SignUpViewModel(private val auth : AuthHelperSignUp) : ViewModel(){
     var signUp : MutableLiveData<String> = MutableLiveData()
     fun signUp (email:String, password: String){
         signUp.value = "loading"
         auth.createUser(email, password, AuthResult = {
             signUp.value = "success"
         }, Exception = {
-            it.message
+            signUp.value = it.message
         })
     }
 

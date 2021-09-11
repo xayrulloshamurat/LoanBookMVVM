@@ -4,9 +4,7 @@ import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 import java.lang.Exception
 
-class AuthHelperSignUp {
-    private val auth = FirebaseAuth.getInstance()
-
+class AuthHelperSignUp(private val auth: FirebaseAuth) {
     fun createUser(
         email: String,
         password: String,

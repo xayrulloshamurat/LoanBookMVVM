@@ -12,21 +12,15 @@ import com.example.loan_book_mvvm.R
 import com.example.loan_book_mvvm.databinding.FragmentSignInBinding
 import com.example.loan_book_mvvm.ui.authHelper.AuthHelperSignIn
 import com.google.firebase.auth.FirebaseAuth
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
 class SignInFragment : Fragment(R.layout.fragment_sign_in) {
     private lateinit var binding: FragmentSignInBinding
-    private lateinit var auth: FirebaseAuth
-    private val viewModel: SignInViewModel by viewModels()
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
+    private val viewModel: SignInViewModel by viewModel()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        auth = FirebaseAuth.getInstance()
-        var authHelper = AuthHelperSignIn()
         binding = FragmentSignInBinding.bind(view)
         binding.signUp.setText(Html.fromHtml("<b> Sign up <b>"))
         binding.signUp.setOnClickListener {
@@ -59,16 +53,6 @@ class SignInFragment : Fragment(R.layout.fragment_sign_in) {
                         }
                     }
                 })
-
-
-//                auth.signInWithEmailAndPassword(email, password)
-//                    .addOnCompleteListener(requireActivity(), OnCompleteListener { task ->
-//                        if (task.isSuccessful) {
-//                            Toast.makeText(requireContext(), "Succesfully logged in :)", Toast.LENGTH_SHORT).show()
-//                        }else{
-//                            Toast.makeText(requireContext(), task.exception?.message, Toast.LENGTH_SHORT).show()
-//                        }
-//                    })
             }
         }
     }

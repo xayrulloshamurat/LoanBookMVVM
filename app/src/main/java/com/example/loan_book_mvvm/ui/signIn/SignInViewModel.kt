@@ -4,8 +4,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.example.loan_book_mvvm.ui.authHelper.AuthHelperSignIn
 
-class SignInViewModel : ViewModel() {
-    var auth = AuthHelperSignIn()
+class SignInViewModel( private val auth : AuthHelperSignIn) : ViewModel() {
+
     var signIn: MutableLiveData<String> = MutableLiveData()
     fun signIn(email:String, password:String){
         signIn.value = "loading"
