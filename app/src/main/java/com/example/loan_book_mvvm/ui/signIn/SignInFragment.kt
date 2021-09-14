@@ -6,12 +6,9 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.loan_book_mvvm.R
 import com.example.loan_book_mvvm.databinding.FragmentSignInBinding
-import com.example.loan_book_mvvm.ui.authHelper.AuthHelperSignIn
-import com.google.firebase.auth.FirebaseAuth
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 
@@ -38,22 +35,23 @@ class SignInFragment : Fragment(R.layout.fragment_sign_in) {
                 var email: String = binding.hintEmail.text.toString()
                 var password: String = binding.hintPassword.text.toString()
                 viewModel.signIn(email, password)
-                viewModel.signIn.observe(viewLifecycleOwner,{
-                    when(it){
-                        "loading"->{
-                            binding.progressBar.isVisible = true
-                        }
-                        "success"->{
-                            binding.progressBar.isVisible = false
-                            Toast.makeText(requireContext(), "Succesfully Login", Toast.LENGTH_SHORT).show()
-                        }
-                        it->{
-                            binding.progressBar.isVisible = false
-                            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                })
+
             }
         }
+        viewModel.signIn.observe(viewLifecycleOwner,{
+            when(it){
+                "loading"->{
+                    binding.progressBar.isVisible = true
+                }
+                "success"->{
+                    binding.progressBar.isVisible = false
+                    findNavController().navigate(R.id.action_signInFragment_to_mainFragment)
+                }
+                it->{
+                    binding.progressBar.isVisible = false
+                    Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
     }
 }

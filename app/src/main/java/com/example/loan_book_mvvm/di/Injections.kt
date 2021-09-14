@@ -1,7 +1,7 @@
 package com.example.loan_book_mvvm.di
 
-import com.example.loan_book_mvvm.ui.authHelper.AuthHelperSignIn
-import com.example.loan_book_mvvm.ui.authHelper.AuthHelperSignUp
+import com.example.loan_book_mvvm.helper.AuthHelperSignIn
+import com.example.loan_book_mvvm.helper.AuthHelperSignUp
 import com.example.loan_book_mvvm.ui.signIn.SignInViewModel
 import com.example.loan_book_mvvm.ui.signUp.SignUpViewModel
 import com.google.firebase.auth.FirebaseAuth

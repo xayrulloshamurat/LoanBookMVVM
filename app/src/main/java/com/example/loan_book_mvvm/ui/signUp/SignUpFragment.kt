@@ -6,13 +6,9 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.example.loan_book_mvvm.R
 import com.example.loan_book_mvvm.databinding.FragmentSignUpBinding
-import com.example.loan_book_mvvm.ui.authHelper.AuthHelperSignUp
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.firebase.auth.FirebaseAuth
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SignUpFragment() : Fragment(R.layout.fragment_sign_up) {
@@ -43,26 +39,23 @@ class SignUpFragment() : Fragment(R.layout.fragment_sign_up) {
                 var email: String = binding.emailText.text.toString()
                 var password: String = binding.passwordText.text.toString()
                 viewModel.signUp(email, password)
-                viewModel.signUp.observe(viewLifecycleOwner, {
-                    when (it) {
-                        "loading" -> {
-                            binding.progressBar.isVisible = true
-                        }
-                        "success" -> {
-                            binding.progressBar.isVisible = false
-                            Toast.makeText(
-                                requireContext(),
-                                "Successfully registration",
-                                Toast.LENGTH_SHORT
-                            ).show()
-                        }
-                        it -> {
-                            binding.progressBar.isVisible = false
-                            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
-                        }
-                    }
-                })
             }
         }
+        viewModel.signUp.observe(viewLifecycleOwner, {
+            when (it) {
+                "loading" -> {
+                    binding.progressBar.isVisible = true
+                }
+                "success" -> {
+                    binding.progressBar.isVisible = false
+                    findNavController().navigate(R.id.action_signUpFragment_to_mainFragment)
+
+                }
+                it -> {
+                    binding.progressBar.isVisible = false
+                    Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
     }
 }

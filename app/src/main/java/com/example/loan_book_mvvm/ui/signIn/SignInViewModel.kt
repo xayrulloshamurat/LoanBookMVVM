@@ -2,7 +2,7 @@ package com.example.loan_book_mvvm.ui.signIn
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.loan_book_mvvm.ui.authHelper.AuthHelperSignIn
+import com.example.loan_book_mvvm.helper.AuthHelperSignIn
 
 class SignInViewModel( private val auth : AuthHelperSignIn) : ViewModel() {
 
