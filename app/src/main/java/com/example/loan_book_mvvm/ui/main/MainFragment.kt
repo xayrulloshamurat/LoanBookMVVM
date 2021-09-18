@@ -1,62 +1,65 @@
 package com.example.loan_book_mvvm.ui.main
 
-import android.annotation.SuppressLint
-import android.app.DatePickerDialog
-import android.graphics.Color
-import android.os.Build
+import android.content.ContentValues.TAG
 import android.os.Bundle
-import android.view.LayoutInflater
+import android.util.Log
 import android.view.View
-import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import com.example.loan_book_mvvm.R
-import com.example.loan_book_mvvm.databinding.ActivityMainBinding
 import com.example.loan_book_mvvm.databinding.FragmentMainBinding
-import com.example.loan_book_mvvm.databinding.FragmentSignInBinding
-import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import java.util.*
+import com.google.firebase.firestore.ktx.firestore
+import com.google.firebase.ktx.Firebase
 
 class MainFragment : Fragment(R.layout.fragment_main) {
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     private lateinit var binding: FragmentMainBinding
-    private lateinit var materialAlertDialogBuilder: MaterialAlertDialogBuilder
-    private lateinit var dataPickerDialog: DatePickerDialog
-    private lateinit var customAlertDialogView: View
-    @RequiresApi(Build.VERSION_CODES.N)
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val c = Calendar.getInstance()
-        val year = c.get(Calendar.YEAR)
-        val month = c.get(Calendar.MONTH)
-        val day = c.get(Calendar.DAY_OF_MONTH)
+        val db = Firebase.firestore
         binding = FragmentMainBinding.bind(view)
-        materialAlertDialogBuilder = MaterialAlertDialogBuilder(requireContext())
-        dataPickerDialog = DatePickerDialog(requireContext())
-        binding.fab.setOnClickListener(View.OnClickListener {
-            customAlertDialogView =
-                LayoutInflater.from(requireContext()).inflate(R.layout.dialog_add, null, false)
+        binding.fab.setOnClickListener {
             launchCustomAlertDialog()
-        })
-    }
+        }
+        binding.button.setOnClickListener {
+            if(binding.edit.text != null){
+                val user = hashMapOf(
+                    "first" to  binding.edit.text.toString() ,
+                    "last" to "Lovelace",
+                    "born" to 1815
+                )
+
+// Add a new document with a generated ID
+                db.collection("users")
+                    .add(user)
+                    .addOnSuccessListener { documentReference ->
+                        Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
+                    }
+                    .addOnFailureListener { e ->
+                        Log.w(TAG, "Error adding document", e)
+                    }
+                db.collection("users")
+                    .get()
+                    .addOnSuccessListener { result ->
+                        for (document in result) {
+                            Log.d(TAG, "${document.id} => ${document.data}")
+                        }
+                    }
+                    .addOnFailureListener { exception ->
+                        Log.w(TAG, "Error getting documents.", exception)
+                    }
+            }
+            }
+        }
+
+
+        // Create a new user with a first and last name
+
+
+
     fun launchCustomAlertDialog() {
-
-        materialAlertDialogBuilder.setView(customAlertDialogView)
-            .setTitle("Добавление")
-            .setPositiveButton("Минус") { dialog, _ ->
-
-                dialog.dismiss()
-            }
-            .setNegativeButton("ПЛЮС"){dialog, _ ->
-                dialog.dismiss()
-            }
-            .setNeutralButton("Отмена"){dialog, _ ->
-                dialog.dismiss()
-            }
-            .show()
+        val myDialog = DebtAndLoanDialog(requireContext())
+        myDialog.show()
     }
 }
