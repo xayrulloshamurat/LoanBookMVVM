@@ -2,4 +2,8 @@
     <string name="app_name">LoanBook</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="addition">Плус</string>
+    <string name="divisor">Минус</string>
+    <string name="back">Отмена</string>
+    <string name="add">Добавление</string>
 </resources>

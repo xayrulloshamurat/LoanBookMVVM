@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:minWidth="300dp"
+    android:minWidth="350dp"
     >
     <TextView
         android:id="@+id/title"
@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="Dobavleniya"
+        android:text="@string/add"
         android:textColor="@color/black"
         android:textSize="25sp"
         android:layout_margin="16dp"
@@ -40,6 +40,7 @@
         android:id="@+id/editMoney"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:inputType="number"
         app:layout_constraintTop_toBottomOf="@id/editContact"
         app:layout_constraintStart_toEndOf="@id/imageCalc"
         app:layout_constraintEnd_toStartOf="@id/calendar"
@@ -55,6 +56,8 @@
         app:layout_constraintEnd_toEndOf="parent"
         android:inputType="date"
         android:text="14 sentabr . 2021"
+        android:textColor="@color/black"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
         app:layout_constraintBaseline_toBaselineOf="@id/editMoney"
         />
     <com.google.android.material.textfield.TextInputEditText
@@ -72,40 +75,35 @@
         android:id="@+id/positiveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/editComments"
-        android:text="Plus"
-        android:textSize="20sp"
+        android:text="@string/addition"
         android:textColor="#0CCC13"
         android:padding="16dp"
-
+        style="@style/Widget.MaterialComponents.Button.TextButton"
         />
     <TextView
         android:id="@+id/negativeButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/positiveButton"
         app:layout_constraintTop_toBottomOf="@id/editComments"
-        android:text="Minus"
-        android:textSize="20sp"
+        android:text="@string/divisor"
         android:textColor="#CC0C0C"
         android:padding="16dp"
+        style="@style/Widget.MaterialComponents.Button.TextButton"
         />
     <TextView
         android:id="@+id/neutralButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/editComments"
-        android:text="Otmena"
-        android:textSize="20sp"
+        android:text="@string/back"
         android:textColor="#249389"
         android:layout_marginStart="5dp"
         android:padding="16dp"
-
+        style="@style/Widget.MaterialComponents.Button.TextButton"
         />
 
 

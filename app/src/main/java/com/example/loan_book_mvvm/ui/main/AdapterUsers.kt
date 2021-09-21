@@ -5,18 +5,26 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.loan_book_mvvm.R
+import com.example.loan_book_mvvm.databinding.ItemUsersBinding
+import com.google.firebase.firestore.FirebaseFirestore
 
 class AdapterUsers : RecyclerView.Adapter<AdapterUsers.UsersViewHolder>() {
-
-    var models: MutableList<AdapterUsers> = mutableListOf()
+    private lateinit var binding: ItemUsersBinding
+    var models: MutableList<FirebaseFirestore> = mutableListOf()
         set(value) {
             field = value
             notifyDataSetChanged()
         }
 
     inner class UsersViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun populateModel(users: AdapterUsers) {
-
+        fun populateModel(db: FirebaseFirestore) {
+            binding = ItemUsersBinding.bind(itemView)
+            db.collection("contacts").get()
+                .addOnSuccessListener {
+                    binding.username.text = "name"
+                    binding.comments.text = "comments"
+                    binding.money.text = "amount"
+                }
         }
     }
 

@@ -2,6 +2,8 @@ package com.example.loan_book_mvvm.di
 
 import com.example.loan_book_mvvm.helper.AuthHelperSignIn
 import com.example.loan_book_mvvm.helper.AuthHelperSignUp
+import com.example.loan_book_mvvm.helper.DataHelper
+import com.example.loan_book_mvvm.ui.main.MainViewModel
 import com.example.loan_book_mvvm.ui.signIn.SignInViewModel
 import com.example.loan_book_mvvm.ui.signUp.SignUpViewModel
 import com.google.firebase.auth.FirebaseAuth
@@ -16,8 +18,10 @@ val dataModul = module {
 val helperModul = module {
     single { AuthHelperSignIn(get()) }
     single { AuthHelperSignUp(get()) }
+    single { DataHelper(get()) }
 }
 val viewModelModule = module {
     viewModel { SignInViewModel(get()) }
     viewModel { SignUpViewModel(get()) }
+    viewModel { MainViewModel(get()) }
 }

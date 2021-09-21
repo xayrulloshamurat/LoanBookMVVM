@@ -4,62 +4,53 @@ import android.content.ContentValues.TAG
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.widget.Toast
+import androidx.core.content.ContentProviderCompat.requireContext
 import androidx.fragment.app.Fragment
 import com.example.loan_book_mvvm.R
 import com.example.loan_book_mvvm.databinding.FragmentMainBinding
 import com.google.firebase.firestore.ktx.firestore
 import com.google.firebase.ktx.Firebase
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class MainFragment : Fragment(R.layout.fragment_main) {
 
 
     private lateinit var binding: FragmentMainBinding
+    private val viewModel : MainViewModel by viewModel()
+    var adapter = AdapterUsers()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val db = Firebase.firestore
         binding = FragmentMainBinding.bind(view)
+
         binding.fab.setOnClickListener {
             launchCustomAlertDialog()
-        }
-        binding.button.setOnClickListener {
-            if(binding.edit.text != null){
-                val user = hashMapOf(
-                    "first" to  binding.edit.text.toString() ,
-                    "last" to "Lovelace",
-                    "born" to 1815
-                )
-
-// Add a new document with a generated ID
-                db.collection("users")
-                    .add(user)
-                    .addOnSuccessListener { documentReference ->
-                        Log.d(TAG, "DocumentSnapshot added with ID: ${documentReference.id}")
-                    }
-                    .addOnFailureListener { e ->
-                        Log.w(TAG, "Error adding document", e)
-                    }
-                db.collection("users")
-                    .get()
-                    .addOnSuccessListener { result ->
-                        for (document in result) {
-                            Log.d(TAG, "${document.id} => ${document.data}")
-                        }
-                    }
-                    .addOnFailureListener { exception ->
-                        Log.w(TAG, "Error getting documents.", exception)
-                    }
-            }
-            }
+            binding.recycler.adapter = adapter
+            setData()
         }
 
+        viewModel.usersLive.observe(viewLifecycleOwner, {
+            when(it){
+                "success"->{
+                    Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show()
+                }
+                it->{
+                    Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
+                }
+            }
+        })
+    }
 
-        // Create a new user with a first and last name
 
+// Create a new user with a first and last name
 
 
     fun launchCustomAlertDialog() {
         val myDialog = DebtAndLoanDialog(requireContext())
         myDialog.show()
+    }
+    fun setData(){
+
     }
 }

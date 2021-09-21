@@ -9,10 +9,9 @@ import com.example.loan_book_mvvm.databinding.CalendarBinding
 import com.example.loan_book_mvvm.databinding.DialogAddBinding
 
 class CalendarDialog(nContext: Context): Dialog(nContext) {
-    private lateinit var binding: CalendarBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.calendar)
-        binding = CalendarBinding.inflate(layoutInflater)
+
     }
 }
