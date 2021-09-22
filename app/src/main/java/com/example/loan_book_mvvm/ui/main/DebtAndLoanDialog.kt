@@ -12,9 +12,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import org.koin.android.compat.ScopeCompat.viewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class DebtAndLoanDialog(nContext: Context) : Dialog(nContext) {
+class DebtAndLoanDialog(nContext: Context, var viewModel: MainViewModel) : Dialog(nContext) {
     private lateinit var binding: DialogAddBinding
-    private val viewModel = MainViewModel(users = DataHelper(db= FirebaseFirestore.getInstance()))
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = DialogAddBinding.inflate(layoutInflater)

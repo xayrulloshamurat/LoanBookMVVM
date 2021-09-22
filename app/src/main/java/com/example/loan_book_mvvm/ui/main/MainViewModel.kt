@@ -14,10 +14,11 @@ class MainViewModel(private val users : DataHelper) : ViewModel() {
         onSuccesListener: () -> Unit,
         onFailureListener: (it: Exception) -> Unit
     ) {
+        usersLive.value = "loading"
         users.addDebt(name, amount, comments, date, onSuccesListener={
             usersLive.value = "success"
         }, onFailureListener={
-            usersLive.value = it.message
+            usersLive.value = it
         })
     }
 }

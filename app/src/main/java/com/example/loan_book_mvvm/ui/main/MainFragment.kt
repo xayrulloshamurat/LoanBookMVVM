@@ -32,6 +32,9 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
         viewModel.usersLive.observe(viewLifecycleOwner, {
             when(it){
+                "loading"->{
+                    Toast.makeText(requireContext(), "Loading", Toast.LENGTH_SHORT).show()
+                }
                 "success"->{
                     Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show()
                 }
@@ -47,7 +50,7 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
 
     fun launchCustomAlertDialog() {
-        val myDialog = DebtAndLoanDialog(requireContext())
+        val myDialog = DebtAndLoanDialog(requireContext(), viewModel)
         myDialog.show()
     }
     fun setData(){
