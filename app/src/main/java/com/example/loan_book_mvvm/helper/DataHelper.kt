@@ -89,8 +89,8 @@ class DataHelper(private val db: FirebaseFirestore) {
                     "comments" to comments,
                     "date" to date
                 )
-                db.collection("contacts").document(user["id"].toString()).collection("transactions")
-                    .add(trans)
+                db.collection("contacts").document(user["id"].toString()).collection("transactions").document()
+                    .set(trans)
                     .addOnSuccessListener {
                         onSuccesListener.invoke()
                     }
