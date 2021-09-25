@@ -12,7 +12,8 @@ import com.google.firebase.firestore.FirebaseFirestore
 import org.koin.android.compat.ScopeCompat.viewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class DebtAndLoanDialog(nContext: Context, var viewModel: MainViewModel) : Dialog(nContext) {
+class DebtAndLoanDialog(nContext: Context, var send: (name: String, amount: Double, comments: String, date: Long) -> Unit
+) : Dialog(nContext) {
     private lateinit var binding: DialogAddBinding
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -26,24 +27,23 @@ class DebtAndLoanDialog(nContext: Context, var viewModel: MainViewModel) : Dialo
 
         }
         binding.positiveButton.setOnClickListener {
-                var name: String = binding.editContact.text.toString()
-                var amount: Double = binding.editMoney.text.toString().toDouble()
-                var comments: String = binding.editComments.text.toString()
-                var date: Long = binding.calendar.drawingTime
-                viewModel.usersFunc(name, amount, comments , date, onSuccesListener = {}, onFailureListener = {})
+
+            var name: String = binding.editContact.text.toString()
+            var amount: Double = binding.editMoney.text.toString().toDouble()
+            var comments: String = binding.editComments.text.toString()
+            var date: Long = binding.calendar.drawingTime
+            send.invoke(name, amount, comments, date)
         }
         binding.negativeButton.setOnClickListener {
-
+            var name: String = binding.editContact.text.toString()
+            var amount: Double = binding.editMoney.text.toString().toDouble()
+            var comments: String = binding.editComments.text.toString()
+            var date: Long = binding.calendar.drawingTime
+            send.invoke(name, amount, comments, date)
         }
         binding.neutralButton.setOnClickListener {
             dismiss()
         }
 
-    }
-
-    fun checkEmpty(): Boolean {
-        binding.editContact.text.toString().isEmpty() || binding.editMoney.text.toString()
-            .isEmpty() || binding.editComments.text.toString().isEmpty()
-        return false
     }
 }

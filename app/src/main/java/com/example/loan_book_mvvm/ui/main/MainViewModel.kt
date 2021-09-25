@@ -6,7 +6,7 @@ import com.example.loan_book_mvvm.helper.DataHelper
 
 class MainViewModel(private val users : DataHelper) : ViewModel() {
     var usersLive: MutableLiveData<String> = MutableLiveData()
-    fun usersFunc(
+    fun debtFunc(
         name: String,
         amount: Double,
         comments: String,
@@ -16,6 +16,21 @@ class MainViewModel(private val users : DataHelper) : ViewModel() {
     ) {
         usersLive.value = "loading"
         users.addDebt(name, amount, comments, date, onSuccesListener={
+            usersLive.value = "success"
+        }, onFailureListener={
+            usersLive.value = it
+        })
+    }
+    fun loanFunc(
+        name: String,
+        amount: Double,
+        comments: String,
+        date: Long,
+        onSuccesListener: () -> Unit,
+        onFailureListener: (it: Exception) -> Unit
+    ) {
+        usersLive.value = "loading"
+        users.addLoan(name, amount, comments, date, onSuccesListener={
             usersLive.value = "success"
         }, onFailureListener={
             usersLive.value = it

@@ -26,8 +26,6 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
         binding.fab.setOnClickListener {
             launchCustomAlertDialog()
-            binding.recycler.adapter = adapter
-            setData()
         }
 
         viewModel.usersLive.observe(viewLifecycleOwner, {
@@ -50,10 +48,14 @@ class MainFragment : Fragment(R.layout.fragment_main) {
 
 
     fun launchCustomAlertDialog() {
-        val myDialog = DebtAndLoanDialog(requireContext(), viewModel)
+        val myDialog = DebtAndLoanDialog(requireContext(),  send  =  {
+            name, amount, comments, date ->
+            if(name.isEmpty() || comments.isEmpty()){
+                Toast.makeText(requireContext(), "Qatorlarni to'ldiring ! ", Toast.LENGTH_SHORT).show()
+            }else{
+                viewModel.debtFunc(name,amount,comments,date, onSuccesListener = {}, onFailureListener = {})
+            }
+        })
         myDialog.show()
-    }
-    fun setData(){
-
     }
 }

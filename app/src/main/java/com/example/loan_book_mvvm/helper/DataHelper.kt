@@ -15,21 +15,7 @@ class DataHelper(private val db: FirebaseFirestore) {
         onSuccesListener: () -> Unit,
         onFailureListener: (String) -> Unit
     ) {
-        val docRef = db.collection("users").whereEqualTo("name", name)
-        docRef.get()
-            .addOnSuccessListener {
-                createUsers(
-                    name,
-                    amount,
-                    comments,
-                    date,
-                    onSuccesListener,
-                    onFailureListener
-                )
-            }
-            .addOnFailureListener {
-                onFailureListener.invoke(it.localizedMessage)
-            }
+        checkContactExists(name, amount, comments, date, onSuccesListener, onFailureListener)
     }
 
     fun addLoan(
@@ -40,31 +26,32 @@ class DataHelper(private val db: FirebaseFirestore) {
         onSuccesListener: () -> Unit,
         onFailureListener: (String) -> Unit
     ) {
-        val docRef = db.collection("users").whereEqualTo("name", name)
-        docRef.get()
+        checkContactExists(name, -1*amount, comments, date, onSuccesListener, onFailureListener)
+    }
+
+    fun checkContactExists(  name: String, amount: Double, comments: String, date: Long, onSuccesListener: () -> Unit, onFailureListener: (String) -> Unit) {
+        db.collection("users").whereEqualTo("name", name).get()
             .addOnSuccessListener {
-                if (docRef != null) {
-                    changed(
-                        name,
-                        amount,
-                        comments,
-                        date,
-                        onSuccesListener,
-                        onFailureListener
-                    )
+                if (it.documents.isEmpty()) {
+                    createUsers(name, amount, comments, date, onSuccesListener, onFailureListener)
                 } else {
-                    createUsers(
-                        name,
-                        amount,
-                        comments,
-                        date,
-                        onSuccesListener,
-                        onFailureListener
-                    )
+                    val id = it.documents[0].data!!.getValue("id").toString()
+                    val balance = it.documents[0].data!!.getValue("amount").toString().toDouble()
+                    updateContact( id, balance, name, amount, comments, date, onSuccesListener, onFailureListener)
                 }
             }
             .addOnFailureListener {
                 onFailureListener.invoke(it.localizedMessage)
+            }
+    }
+
+    private fun updateContact(id: String, balance : Double,name: String, amount: Double, comments: String, date: Long, onSuccesListener: () -> Unit, onFailureListener: (String) -> Unit) {
+        db.collection("contacts").document(id).update("amount", balance+amount)
+            .addOnSuccessListener {
+                addTransaction(id, name, amount, comments, date, onSuccesListener, onFailureListener)
+            }
+            .addOnFailureListener {
+                onFailureListener.invoke(it.message.toString())
             }
     }
 
@@ -81,36 +68,30 @@ class DataHelper(private val db: FirebaseFirestore) {
             "name" to name,
             "amount" to amount
         )
-        db.collection("contacts")
-            .add(user)
+        db.collection("contacts").document(user.getValue("id").toString())
+            .set(user)
             .addOnSuccessListener { documentReference ->
-                val trans = hashMapOf<String, Any>(
-                    "name" to name,
-                    "comments" to comments,
-                    "date" to date
-                )
-                db.collection("contacts").document(user["id"].toString()).collection("transactions").document()
-                    .set(trans)
-                    .addOnSuccessListener {
-                        onSuccesListener.invoke()
-                    }
-                    .addOnFailureListener {
-                        onFailureListener.invoke(it.localizedMessage)
-                    }
+              addTransaction(user["id"].toString(), name,amount,comments,date, onSuccesListener, onFailureListener)
             }
             .addOnFailureListener { e ->
                 onFailureListener(e.localizedMessage)
             }
     }
 
-    fun changed(
-        name: String,
-        amount: Double,
-        comments: String,
-        date: Long,
-        onSuccesListener: () -> Unit,
-        onFailureListener: (it: String) -> Unit
-    ) {
-
+    private fun addTransaction(id: String, name: String, amount: Double, comments: String, date: Long, onSuccesListener: () -> Unit, onFailureListener: (it: String) -> Unit) {
+        val trans = hashMapOf<String, Any>(
+            "name" to name,
+            "comments" to comments,
+            "date" to date
+        )
+        db.collection("contacts").document(id).collection("transactions")
+            .document()
+            .set(trans)
+            .addOnSuccessListener {
+                onSuccesListener.invoke()
+            }
+            .addOnFailureListener {
+                onFailureListener.invoke(it.localizedMessage)
+            }
     }
 }
