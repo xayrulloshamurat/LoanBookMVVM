@@ -30,13 +30,13 @@ class DataHelper(private val db: FirebaseFirestore) {
     }
 
     fun checkContactExists(  name: String, amount: Double, comments: String, date: Long, onSuccesListener: () -> Unit, onFailureListener: (String) -> Unit) {
-        db.collection("users").whereEqualTo("name", name).get()
+        db.collection("contacts").whereEqualTo("name", name).get()
             .addOnSuccessListener {
                 if (it.documents.isEmpty()) {
                     createUsers(name, amount, comments, date, onSuccesListener, onFailureListener)
                 } else {
                     val id = it.documents[0].data!!.getValue("id").toString()
-                    val balance = it.documents[0].data!!.getValue("amount").toString().toDouble()
+                    val balance = it.documents[0].data!!.getValue("balance").toString().toDouble()
                     updateContact( id, balance, name, amount, comments, date, onSuccesListener, onFailureListener)
                 }
             }
@@ -46,7 +46,7 @@ class DataHelper(private val db: FirebaseFirestore) {
     }
 
     private fun updateContact(id: String, balance : Double,name: String, amount: Double, comments: String, date: Long, onSuccesListener: () -> Unit, onFailureListener: (String) -> Unit) {
-        db.collection("contacts").document(id).update("amount", balance+amount)
+        db.collection("contacts").document(id).update("balance", balance+amount)
             .addOnSuccessListener {
                 addTransaction(id, name, amount, comments, date, onSuccesListener, onFailureListener)
             }
@@ -66,26 +66,26 @@ class DataHelper(private val db: FirebaseFirestore) {
         val user = hashMapOf<String, Any>(
             "id" to UUID.randomUUID().toString(),
             "name" to name,
-            "amount" to amount
+            "balance" to amount
         )
         db.collection("contacts").document(user.getValue("id").toString())
             .set(user)
-            .addOnSuccessListener { documentReference ->
+            .addOnSuccessListener {
               addTransaction(user["id"].toString(), name,amount,comments,date, onSuccesListener, onFailureListener)
             }
-            .addOnFailureListener { e ->
-                onFailureListener(e.localizedMessage)
+            .addOnFailureListener {
+                onFailureListener(it.localizedMessage)
             }
     }
 
     private fun addTransaction(id: String, name: String, amount: Double, comments: String, date: Long, onSuccesListener: () -> Unit, onFailureListener: (it: String) -> Unit) {
         val trans = hashMapOf<String, Any>(
-            "name" to name,
-            "comments" to comments,
+            "id" to UUID.randomUUID().toString(),
+            "amount" to amount,
             "date" to date
         )
         db.collection("contacts").document(id).collection("transactions")
-            .document()
+            .document(trans["id"].toString())
             .set(trans)
             .addOnSuccessListener {
                 onSuccesListener.invoke()
