@@ -12,7 +12,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 import org.koin.android.compat.ScopeCompat.viewModel
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-class DebtAndLoanDialog(nContext: Context, var send: (name: String, amount: Double, comments: String, date: Long) -> Unit
+class DebtAndLoanDialog(
+    nContext: Context,
+    var onPlus: (name: String, amount: Double, comments: String, date: Long) -> Unit,
+    var onMinus: (name: String, amount: Double, comments: String, date: Long) -> Unit
 ) : Dialog(nContext) {
     private lateinit var binding: DialogAddBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,17 +32,27 @@ class DebtAndLoanDialog(nContext: Context, var send: (name: String, amount: Doub
         binding.positiveButton.setOnClickListener {
 
             var name: String = binding.editContact.text.toString()
-            var amount: Double = binding.editMoney.text.toString().toDouble()
+            var amount = binding.editMoney.text.toString()
             var comments: String = binding.editComments.text.toString()
             var date: Long = binding.calendar.drawingTime
-            send.invoke(name, amount, comments, date)
+            if (name.isNotEmpty() && amount.isNotEmpty() && comments.isNotEmpty()) {
+                onPlus.invoke(name, amount.toDouble(), comments, date)
+            } else {
+                Toast.makeText(context, "Qatorlarni to'ldiring!", Toast.LENGTH_SHORT).show()
+            }
+            dismiss()
         }
         binding.negativeButton.setOnClickListener {
             var name: String = binding.editContact.text.toString()
-            var amount: Double = binding.editMoney.text.toString().toDouble()
+            var amount = binding.editMoney.text.toString()
             var comments: String = binding.editComments.text.toString()
             var date: Long = binding.calendar.drawingTime
-            send.invoke(name, amount, comments, date)
+            if (name.isNotEmpty() && amount.isNotEmpty() && comments.isNotEmpty()) {
+                onMinus.invoke(name, amount.toDouble(), comments, date)
+            } else {
+                Toast.makeText(context, "Qatorlarni to'ldiring!", Toast.LENGTH_SHORT).show()
+            }
+            dismiss()
         }
         binding.neutralButton.setOnClickListener {
             dismiss()

@@ -3,29 +3,19 @@ package com.example.loan_book_mvvm.ui.main
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.loan_book_mvvm.R
 import com.example.loan_book_mvvm.databinding.ItemUsersBinding
+import com.example.loan_book_mvvm.helper.User
 import com.google.firebase.firestore.FirebaseFirestore
 
-class AdapterUsers : RecyclerView.Adapter<AdapterUsers.UsersViewHolder>() {
-    private lateinit var binding: ItemUsersBinding
-    var models: MutableList<FirebaseFirestore> = mutableListOf()
-        set(value) {
-            field = value
-            notifyDataSetChanged()
-        }
+class AdapterUsers( var userList : ArrayList<User>) : RecyclerView.Adapter<AdapterUsers.UsersViewHolder>() {
 
     inner class UsersViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun populateModel(db: FirebaseFirestore) {
-            binding = ItemUsersBinding.bind(itemView)
-            db.collection("contacts").get()
-                .addOnSuccessListener {
-                    binding.username.text = "name"
-                    binding.comments.text = "comments"
-                    binding.money.text = "amount"
-                }
-        }
+            var name: TextView = itemView.findViewById(R.id.username)
+            var comments: TextView = itemView.findViewById(R.id.comments)
+            var money: TextView = itemView.findViewById(R.id.money)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UsersViewHolder {
@@ -34,9 +24,10 @@ class AdapterUsers : RecyclerView.Adapter<AdapterUsers.UsersViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: UsersViewHolder, position: Int) {
-        holder.populateModel(models[position])
+      val user : User = userList[position]
+        holder.name.text = user.name
+        holder.comments.text = user.comments
+        holder.money.text = user.amount.toString()
     }
-
-    override fun getItemCount() = models.size
-
+    override fun getItemCount() = userList.size
 }

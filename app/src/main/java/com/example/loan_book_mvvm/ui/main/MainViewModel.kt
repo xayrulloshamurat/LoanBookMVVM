@@ -11,8 +11,6 @@ class MainViewModel(private val users : DataHelper) : ViewModel() {
         amount: Double,
         comments: String,
         date: Long,
-        onSuccesListener: () -> Unit,
-        onFailureListener: (it: Exception) -> Unit
     ) {
         usersLive.value = "loading"
         users.addDebt(name, amount, comments, date, onSuccesListener={
@@ -26,8 +24,6 @@ class MainViewModel(private val users : DataHelper) : ViewModel() {
         amount: Double,
         comments: String,
         date: Long,
-        onSuccesListener: () -> Unit,
-        onFailureListener: (it: Exception) -> Unit
     ) {
         usersLive.value = "loading"
         users.addLoan(name, amount, comments, date, onSuccesListener={
@@ -35,5 +31,10 @@ class MainViewModel(private val users : DataHelper) : ViewModel() {
         }, onFailureListener={
             usersLive.value = it
         })
+    }
+    fun recycler(){
+        users.eventChangeListener(
+
+        )
     }
 }

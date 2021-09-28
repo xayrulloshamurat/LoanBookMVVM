@@ -2,8 +2,10 @@ package com.example.loan_book_mvvm.helper
 
 import android.content.ContentValues
 import android.util.Log
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.*
+import com.google.firebase.firestore.EventListener
 import java.util.*
+import kotlin.collections.ArrayList
 
 class DataHelper(private val db: FirebaseFirestore) {
 
@@ -26,10 +28,17 @@ class DataHelper(private val db: FirebaseFirestore) {
         onSuccesListener: () -> Unit,
         onFailureListener: (String) -> Unit
     ) {
-        checkContactExists(name, -1*amount, comments, date, onSuccesListener, onFailureListener)
+        checkContactExists(name, -1 * amount, comments, date, onSuccesListener, onFailureListener)
     }
 
-    fun checkContactExists(  name: String, amount: Double, comments: String, date: Long, onSuccesListener: () -> Unit, onFailureListener: (String) -> Unit) {
+    fun checkContactExists(
+        name: String,
+        amount: Double,
+        comments: String,
+        date: Long,
+        onSuccesListener: () -> Unit,
+        onFailureListener: (String) -> Unit
+    ) {
         db.collection("contacts").whereEqualTo("name", name).get()
             .addOnSuccessListener {
                 if (it.documents.isEmpty()) {
@@ -37,7 +46,16 @@ class DataHelper(private val db: FirebaseFirestore) {
                 } else {
                     val id = it.documents[0].data!!.getValue("id").toString()
                     val balance = it.documents[0].data!!.getValue("balance").toString().toDouble()
-                    updateContact( id, balance, name, amount, comments, date, onSuccesListener, onFailureListener)
+                    updateContact(
+                        id,
+                        balance,
+                        name,
+                        amount,
+                        comments,
+                        date,
+                        onSuccesListener,
+                        onFailureListener
+                    )
                 }
             }
             .addOnFailureListener {
@@ -45,10 +63,27 @@ class DataHelper(private val db: FirebaseFirestore) {
             }
     }
 
-    private fun updateContact(id: String, balance : Double,name: String, amount: Double, comments: String, date: Long, onSuccesListener: () -> Unit, onFailureListener: (String) -> Unit) {
-        db.collection("contacts").document(id).update("balance", balance+amount)
+    private fun updateContact(
+        id: String,
+        balance: Double,
+        name: String,
+        amount: Double,
+        comments: String,
+        date: Long,
+        onSuccesListener: () -> Unit,
+        onFailureListener: (String) -> Unit
+    ) {
+        db.collection("contacts").document(id).update("balance", balance + amount)
             .addOnSuccessListener {
-                addTransaction(id, name, amount, comments, date, onSuccesListener, onFailureListener)
+                addTransaction(
+                    id,
+                    name,
+                    amount,
+                    comments,
+                    date,
+                    onSuccesListener,
+                    onFailureListener
+                )
             }
             .addOnFailureListener {
                 onFailureListener.invoke(it.message.toString())
@@ -66,19 +101,36 @@ class DataHelper(private val db: FirebaseFirestore) {
         val user = hashMapOf<String, Any>(
             "id" to UUID.randomUUID().toString(),
             "name" to name,
-            "balance" to amount
+            "balance" to amount,
+            "comments" to comments
         )
         db.collection("contacts").document(user.getValue("id").toString())
             .set(user)
             .addOnSuccessListener {
-              addTransaction(user["id"].toString(), name,amount,comments,date, onSuccesListener, onFailureListener)
+                addTransaction(
+                    user["id"].toString(),
+                    name,
+                    amount,
+                    comments,
+                    date,
+                    onSuccesListener,
+                    onFailureListener
+                )
             }
             .addOnFailureListener {
                 onFailureListener(it.localizedMessage)
             }
     }
 
-    private fun addTransaction(id: String, name: String, amount: Double, comments: String, date: Long, onSuccesListener: () -> Unit, onFailureListener: (it: String) -> Unit) {
+    private fun addTransaction(
+        id: String,
+        name: String,
+        amount: Double,
+        comments: String,
+        date: Long,
+        onSuccesListener: () -> Unit,
+        onFailureListener: (it: String) -> Unit
+    ) {
         val trans = hashMapOf<String, Any>(
             "id" to UUID.randomUUID().toString(),
             "amount" to amount,
@@ -93,5 +145,25 @@ class DataHelper(private val db: FirebaseFirestore) {
             .addOnFailureListener {
                 onFailureListener.invoke(it.localizedMessage)
             }
+    }
+     fun eventChangeListener() {
+        var array : ArrayList<User> = arrayListOf()
+        db.collection("contacts").addSnapshotListener((object : EventListener<QuerySnapshot> {
+            override fun onEvent(
+                value: QuerySnapshot?,
+                error: FirebaseFirestoreException?
+            ) {
+                if (error != null) {
+                    Log.e("Firestore error", error.message.toString())
+                    return
+                }
+                for (dc: DocumentChange in value?.documentChanges!!) {
+                    if (dc.type == DocumentChange.Type.ADDED) {
+                        array.add(dc.document.toObject(User::class.java))
+                    }
+                }
+            }
+        }))
+
     }
 }
