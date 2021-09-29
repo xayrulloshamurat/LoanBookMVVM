@@ -1,6 +1,5 @@
-package com.example.loan_book_mvvm.helper
+package com.example.loan_book_mvvm.data.helper
 
-import android.view.View
 import com.google.firebase.auth.AuthResult
 import com.google.firebase.auth.FirebaseAuth
 

@@ -1,8 +1,8 @@
 package com.example.loan_book_mvvm.di
 
-import com.example.loan_book_mvvm.helper.AuthHelperSignIn
-import com.example.loan_book_mvvm.helper.AuthHelperSignUp
-import com.example.loan_book_mvvm.helper.DataHelper
+import com.example.loan_book_mvvm.data.helper.AuthHelperSignIn
+import com.example.loan_book_mvvm.data.helper.AuthHelperSignUp
+import com.example.loan_book_mvvm.data.helper.DataHelper
 import com.example.loan_book_mvvm.ui.main.MainViewModel
 import com.example.loan_book_mvvm.ui.signIn.SignInViewModel
 import com.example.loan_book_mvvm.ui.signUp.SignUpViewModel

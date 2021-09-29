@@ -2,21 +2,24 @@ package com.example.loan_book_mvvm.ui.main
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.example.loan_book_mvvm.helper.DataHelper
+import com.example.loan_book_mvvm.data.Resource
+import com.example.loan_book_mvvm.data.helper.Contacts
+import com.example.loan_book_mvvm.data.helper.DataHelper
 
-class MainViewModel(private val users : DataHelper) : ViewModel() {
-    var usersLive: MutableLiveData<String> = MutableLiveData()
+class MainViewModel(private val dataHelper : DataHelper) : ViewModel() {
+    var transactionsLive: MutableLiveData<String> = MutableLiveData()
+    val contactsLive : MutableLiveData<Resource<List<Contacts>>> = MutableLiveData()
     fun debtFunc(
         name: String,
         amount: Double,
         comments: String,
         date: Long,
     ) {
-        usersLive.value = "loading"
-        users.addDebt(name, amount, comments, date, onSuccesListener={
-            usersLive.value = "success"
+        transactionsLive.value = "loading"
+        dataHelper.addDebt(name, amount, comments, date, onSuccesListener={
+            transactionsLive.value = "success"
         }, onFailureListener={
-            usersLive.value = it
+            transactionsLive.value = it
         })
     }
     fun loanFunc(
@@ -25,16 +28,23 @@ class MainViewModel(private val users : DataHelper) : ViewModel() {
         comments: String,
         date: Long,
     ) {
-        usersLive.value = "loading"
-        users.addLoan(name, amount, comments, date, onSuccesListener={
-            usersLive.value = "success"
+        transactionsLive.value = "loading"
+        dataHelper.addLoan(name, amount, comments, date, onSuccesListener={
+            transactionsLive.value = "success"
         }, onFailureListener={
-            usersLive.value = it
+            transactionsLive.value = it
         })
     }
-    fun recycler(){
-        users.eventChangeListener(
-
+    fun contactsFun(){
+        contactsLive.value = Resource.loading()
+        dataHelper.eventChangeListener(
+            {
+                 contactsLive.value = Resource.success(it)
+            },
+            {
+                contactsLive.value = Resource.error(it)
+            }
         )
     }
+
 }

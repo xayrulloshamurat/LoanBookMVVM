@@ -1,9 +1,9 @@
-package com.example.loan_book_mvvm.helper
+package com.example.loan_book_mvvm.data.helper
 
-import android.content.ContentValues
 import android.util.Log
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.ktx.toObject
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -146,24 +146,18 @@ class DataHelper(private val db: FirebaseFirestore) {
                 onFailureListener.invoke(it.localizedMessage)
             }
     }
-     fun eventChangeListener() {
-        var array : ArrayList<User> = arrayListOf()
-        db.collection("contacts").addSnapshotListener((object : EventListener<QuerySnapshot> {
-            override fun onEvent(
-                value: QuerySnapshot?,
-                error: FirebaseFirestoreException?
-            ) {
-                if (error != null) {
-                    Log.e("Firestore error", error.message.toString())
-                    return
-                }
-                for (dc: DocumentChange in value?.documentChanges!!) {
-                    if (dc.type == DocumentChange.Type.ADDED) {
-                        array.add(dc.document.toObject(User::class.java))
-                    }
+
+    fun eventChangeListener(onSuccess: (result : ArrayList<Contacts>) -> Unit, onFailure: (msg: String) -> Unit) {
+        var result : ArrayList<Contacts> = arrayListOf()
+        db.collection("contacts").get()
+            .addOnSuccessListener {it->
+                it.documents.forEach {
+                    result = it.toObject(Contacts::class.java!!)
+                    onSuccess.invoke(result)
                 }
             }
-        }))
-
+            .addOnFailureListener {
+                onFailure.invoke(it.localizedMessage)
+            }
     }
 }
