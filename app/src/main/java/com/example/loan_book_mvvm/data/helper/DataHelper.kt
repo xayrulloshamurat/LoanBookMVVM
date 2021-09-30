@@ -152,9 +152,10 @@ class DataHelper(private val db: FirebaseFirestore) {
         db.collection("contacts").get()
             .addOnSuccessListener {it->
                 it.documents.forEach {
-                    result = it.toObject(Contacts::class.java!!)
-                    onSuccess.invoke(result)
+                    result = it.toObject(Contacts::class.java)!!
+
                 }
+                onSuccess.invoke(result)
             }
             .addOnFailureListener {
                 onFailure.invoke(it.localizedMessage)
