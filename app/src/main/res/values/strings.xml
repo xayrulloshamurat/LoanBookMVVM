@@ -6,4 +6,9 @@
     <string name="divisor">Минус</string>
     <string name="back">Отмена</string>
     <string name="add">Добавление</string>
+    <string name="contact_name">Имя контакта</string>
+    <string name="money">Сумма</string>
+    <string name="comments">Комментарий</string>
+    <string name="operations_history">operations_history</string>
+    <string name="menu_operations_history">Operations History</string>
 </resources>

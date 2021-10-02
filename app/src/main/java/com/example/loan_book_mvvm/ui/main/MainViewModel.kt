@@ -5,10 +5,14 @@ import androidx.lifecycle.ViewModel
 import com.example.loan_book_mvvm.data.Resource
 import com.example.loan_book_mvvm.data.helper.Contacts
 import com.example.loan_book_mvvm.data.helper.DataHelper
+import com.example.loan_book_mvvm.data.helper.TransactionData
 
-class MainViewModel(private val dataHelper : DataHelper) : ViewModel() {
+class MainViewModel(private val dataHelper: DataHelper) : ViewModel() {
     var transactionsLive: MutableLiveData<String> = MutableLiveData()
-    val contactsLive : MutableLiveData<Resource<List<Contacts>>> = MutableLiveData()
+    val contactsLive: MutableLiveData<Resource<List<Contacts>>> = MutableLiveData()
+    val recyclerTransactionsLive: MutableLiveData<Resource<List<TransactionData>>> =
+        MutableLiveData()
+
     fun debtFunc(
         name: String,
         amount: Double,
@@ -16,12 +20,13 @@ class MainViewModel(private val dataHelper : DataHelper) : ViewModel() {
         date: Long,
     ) {
         transactionsLive.value = "loading"
-        dataHelper.addDebt(name, amount, comments, date, onSuccesListener={
+        dataHelper.addDebt(name, amount, comments, date, onSuccesListener = {
             transactionsLive.value = "success"
-        }, onFailureListener={
+        }, onFailureListener = {
             transactionsLive.value = it
         })
     }
+
     fun loanFunc(
         name: String,
         amount: Double,
@@ -29,17 +34,18 @@ class MainViewModel(private val dataHelper : DataHelper) : ViewModel() {
         date: Long,
     ) {
         transactionsLive.value = "loading"
-        dataHelper.addLoan(name, amount, comments, date, onSuccesListener={
+        dataHelper.addLoan(name, amount, comments, date, onSuccesListener = {
             transactionsLive.value = "success"
-        }, onFailureListener={
+        }, onFailureListener = {
             transactionsLive.value = it
         })
     }
-    fun contactsFun(){
+
+    fun contactsFun() {
         contactsLive.value = Resource.loading()
         dataHelper.eventChangeListener(
             {
-                 contactsLive.value = Resource.success(it)
+                contactsLive.value = Resource.success(it)
             },
             {
                 contactsLive.value = Resource.error(it)
@@ -47,4 +53,15 @@ class MainViewModel(private val dataHelper : DataHelper) : ViewModel() {
         )
     }
 
+    fun getTransaction() {
+
+        recyclerTransactionsLive.value = Resource.loading()
+        dataHelper.transactionsAddRecycler("sdsa",
+            {
+                recyclerTransactionsLive.value = Resource.success(it)
+            },
+            {
+                recyclerTransactionsLive.value = Resource.error(it)
+            })
+    }
 }

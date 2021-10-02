@@ -20,7 +20,7 @@
         android:id="@+id/editContact"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:hint="Имя контакта"
+        android:hint="@string/contact_name"
         android:layout_margin="16dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -45,7 +45,7 @@
         app:layout_constraintStart_toEndOf="@id/imageCalc"
         app:layout_constraintEnd_toStartOf="@id/calendar"
         android:layout_margin="16dp"
-        android:hint="Сумма"
+        android:hint="@string/money"
         />
     <TextView
         android:id="@+id/calendar"
@@ -65,7 +65,7 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toBottomOf="@id/imageCalc"
-        android:hint="Комментарий"
+        android:hint="@string/comments"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="16dp"

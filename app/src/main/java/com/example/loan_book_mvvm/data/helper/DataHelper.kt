@@ -152,8 +152,21 @@ class DataHelper(private val db: FirebaseFirestore) {
         db.collection("contacts").get()
             .addOnSuccessListener {it->
                 it.documents.forEach {
-                    result = it.toObject(Contacts::class.java)!!
+                    result.add( it.toObject(Contacts::class.java)!!)
 
+                }
+                onSuccess.invoke(result)
+            }
+            .addOnFailureListener {
+                onFailure.invoke(it.localizedMessage)
+            }
+    }
+    fun transactionsAddRecycler(contactId: String,onSuccess: (result : ArrayList<TransactionData>) -> Unit, onFailure: (msg: String) -> Unit  ){
+        var result : ArrayList<TransactionData> = arrayListOf()
+        db.collection("collections").document(contactId).collection("transactions").get()
+            .addOnSuccessListener {
+                it.documents.forEach {
+                    result.add(it.toObject(TransactionData::class.java)!!)
                 }
                 onSuccess.invoke(result)
             }

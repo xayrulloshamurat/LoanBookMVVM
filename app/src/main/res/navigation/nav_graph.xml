@@ -40,5 +40,13 @@
     <fragment
         android:id="@+id/mainFragment"
         android:name="com.example.loan_book_mvvm.ui.main.MainFragment"
-        android:label="MainFragment" />
+        android:label="MainFragment" >
+        <action
+            android:id="@+id/action_mainFragment_to_fragmentStory"
+            app:destination="@id/fragmentStory" />
+    </fragment>
+    <fragment
+        android:id="@+id/fragmentStory"
+        android:name="com.example.loan_book_mvvm.ui.main.FragmentStory"
+        android:label="FragmentStory" />
 </navigation>
