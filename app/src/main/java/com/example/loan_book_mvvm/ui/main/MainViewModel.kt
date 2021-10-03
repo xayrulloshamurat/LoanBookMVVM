@@ -53,10 +53,10 @@ class MainViewModel(private val dataHelper: DataHelper) : ViewModel() {
         )
     }
 
-    fun getTransaction() {
+    fun getTransaction(name: String) {
 
         recyclerTransactionsLive.value = Resource.loading()
-        dataHelper.transactionsAddRecycler("sdsa",
+        dataHelper.getTransactionRecycler(name,
             {
                 recyclerTransactionsLive.value = Resource.success(it)
             },

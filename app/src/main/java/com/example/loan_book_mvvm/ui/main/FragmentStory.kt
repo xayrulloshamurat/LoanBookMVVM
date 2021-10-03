@@ -13,15 +13,17 @@ class FragmentStory : Fragment(R.layout.fragment_story) {
 
     private lateinit var binding: FragmentMainBinding
     private val viewModel: MainViewModel by viewModel()
+    var adapter : AdapterTransactionsToRecycler = AdapterTransactionsToRecycler()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        viewModel.getTransaction()
         viewModel.recyclerTransactionsLive.observe(viewLifecycleOwner, {
             when(it.status){
                 ResourceState.LOADING->{
                     Toast.makeText(requireContext(), "Loading", Toast.LENGTH_SHORT).show()
                 }
                 ResourceState.SUCCESS->{
-
+                    Toast.makeText(requireContext(), "Success", Toast.LENGTH_SHORT).show()
+                    binding.recycler.adapter = adapter
+                    adapter.models = it.data !!
                 }
                 ResourceState.ERROR->{
                     Toast.makeText(requireContext(), it.message, Toast.LENGTH_SHORT).show()

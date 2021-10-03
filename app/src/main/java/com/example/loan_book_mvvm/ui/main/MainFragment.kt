@@ -76,15 +76,14 @@ class MainFragment : Fragment(R.layout.fragment_main) {
         )
         myDialog.show()
     }
-    fun onOptionsButtonClicked(view: View){
+    fun onOptionsButtonClicked(view: View, name: String){
         val optionsMenu = PopupMenu(requireContext(),view)
         val menuInflater = optionsMenu.menuInflater.inflate(R.menu.menu_item_options, optionsMenu.menu)
         optionsMenu.setOnMenuItemClickListener {
             findNavController().navigate(R.id.action_mainFragment_to_fragmentStory)
+            viewModel.getTransaction(name)
          return@setOnMenuItemClickListener true
         }
         optionsMenu.show()
     }
-
-
 }

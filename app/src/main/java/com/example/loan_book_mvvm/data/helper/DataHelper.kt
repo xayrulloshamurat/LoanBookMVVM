@@ -102,7 +102,6 @@ class DataHelper(private val db: FirebaseFirestore) {
             "id" to UUID.randomUUID().toString(),
             "name" to name,
             "balance" to amount,
-            "comments" to comments
         )
         db.collection("contacts").document(user.getValue("id").toString())
             .set(user)
@@ -134,6 +133,7 @@ class DataHelper(private val db: FirebaseFirestore) {
         val trans = hashMapOf<String, Any>(
             "id" to UUID.randomUUID().toString(),
             "amount" to amount,
+            "name" to name,
             "date" to date
         )
         db.collection("contacts").document(id).collection("transactions")
@@ -169,6 +169,16 @@ class DataHelper(private val db: FirebaseFirestore) {
                     result.add(it.toObject(TransactionData::class.java)!!)
                 }
                 onSuccess.invoke(result)
+            }
+            .addOnFailureListener {
+                onFailure.invoke(it.localizedMessage)
+            }
+    }
+    fun getTransactionRecycler(name: String,onSuccess: (result : ArrayList<TransactionData>) -> Unit, onFailure: (msg: String) -> Unit){
+        db.collection("collections").whereEqualTo("name", name).get()
+            .addOnSuccessListener {
+                val id = it.documents[0].data!!.getValue("id").toString()
+                transactionsAddRecycler(id, onSuccess,onFailure)
             }
             .addOnFailureListener {
                 onFailure.invoke(it.localizedMessage)
